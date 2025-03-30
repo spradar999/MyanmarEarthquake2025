@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Image Change Detection Slider</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: white;
+            overflow-y: auto;
+            text-align: center;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 0px;
+        }
+
+        .slider-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .slider-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            color: white;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .image1, .image2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .image2 {
+            clip-path: inset(100% 0 0 0);
+        }
+		
+		 h2 {
+		 font-size: 18px;
+            font-weight: bold;
+            color: #ffcc00;
+	    margin: 0;
+        }
+      
+        .slider-bar {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: black;
+            cursor: pointer;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        .label {
+            position: absolute;
+            color: white;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0);
+            padding: 5px 10px;
+            margin: 0;
+            border-radius: 5px;
+            font-size: 9px;
+            transform: translateX(-50%);
+            transition: opacity 0.2s ease;
+            left: 15%;
+        }
+		/* Fix for Mobile Screens */
+@media (max-width: 768px) {
+    .image-container {
+        height: 400px; /* Adjust for smaller screens */
+        max-height: 30vh;
+    }
+
+    .image1, .image2 {
+        object-fit: contain; /* Ensures full visibility on small screens */
+    }
+       
+    }
+}
+}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h2>Myanmar earthquake:28 March 2025</h2>
+        <div id="sliders"></div>
+    </div>
+
+    <script>
+        const imagePairs = [
+            { title: "Aung Yadnar st", before: "Pre1.png", after: "Post1.png", beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3(29.03.2025)" },
+            { title: "Ava Bridge", before: "Pre2.png", after: "Post2.png", beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3 (29.03.2025)" },
+            { title: "Sky Villa", before: "Pre3.png", after: "Post3.png",beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3 (29.03.2025)"},
+            { title: "Mandalay University", before: "Pre4.png", after: "Post4.png",beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3 (29.03.2025)"},
+            { title: "Irrawaddy River Floodplain", before: "Pre5.png", after: "Post5.png", beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3 (29.03.2025)" }
+        ];
+
+        const container = document.getElementById('sliders');
+
+        imagePairs.forEach((pair, index) => {
+            const sliderHTML = `
+                <div class="slider-section">
+                    <h3 class="slider-title">${pair.title}</h3>
+                    <div class="image-container" id="slider-${index}">
+                        <img src="${pair.after}" class="image1">
+                        <img src="${pair.before}" class="image2" id="image2-${index}">
+                        <div class="slider-bar" id="slider-bar-${index}"></div>
+                        <div class="label before-label" id="before-label-${index}">${pair.beforeLabel}</div>
+                        <div class="label after-label" id="after-label-${index}">${pair.afterLabel}</div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += sliderHTML;
+        });
+
+        imagePairs.forEach((_, index) => {
+            let isDragging = false;
+            let startY = 0;
+            let position = 50;
+            const image2 = document.getElementById(`image2-${index}`);
+            const sliderBar = document.getElementById(`slider-bar-${index}`);
+            const beforeLabel = document.getElementById(`before-label-${index}`);
+            const afterLabel = document.getElementById(`after-label-${index}`);
+
+            function updateClipPath() {
+                image2.style.clipPath = `inset(${position}% 0 0 0)`;
+                sliderBar.style.top = `${position}%`;
+                afterLabel.style.top = `${position - 5}%`;
+                beforeLabel.style.top = `${position + 5}%`;
+            }
+
+            function startDrag(event) {
+                isDragging = true;
+                startY = event.clientY || event.touches[0].clientY;
+                event.preventDefault();
+            }
+
+            function dragMove(event) {
+                if (!isDragging) return;
+                let moveY = event.clientY || event.touches[0].clientY;
+                let diff = startY - moveY;
+                position = Math.max(0, Math.min(100, position - diff / 5));
+                updateClipPath();
+                startY = moveY;
+                event.preventDefault();
+            }
+
+            function endDrag() {
+                isDragging = false;
+            }
+
+            const sliderElement = document.getElementById(`slider-${index}`);
+
+            sliderElement.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', endDrag);
+
+            sliderElement.addEventListener('touchstart', startDrag);
+            document.addEventListener('touchmove', dragMove, { passive: false });
+            document.addEventListener('touchend', endDrag);
+
+            document.addEventListener('wheel', (event) => {
+                if (!event.target.closest(`#slider-${index}`)) return;
+                event.preventDefault();
+                position = Math.max(0, Math.min(100, position + (event.deltaY > 0 ? 2 : -2)));
+                updateClipPath();
+            }, { passive: false });
+
+            updateClipPath();
+        });
+    </script>
+</body>
+</html>
