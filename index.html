@@ -54,14 +54,14 @@
         .image2 {
             clip-path: inset(100% 0 0 0);
         }
-		
-		 h2 {
-		 font-size: 18px;
+
+        h2 {
+            font-size: 18px;
             font-weight: bold;
             color: #ffcc00;
-	    margin: 0;
+            margin: 0;
         }
-      
+
         .slider-bar {
             position: absolute;
             width: 100%;
@@ -71,16 +71,21 @@
             opacity: 1;
             z-index: 10;
         }
-	.text-content {
-    text-align: left;
-}
-.text-content ul {
-    padding-left: 20px; /* Adjust indentation if needed */
-}
-.text-content p, 
-.text-content li {
-    text-align: left;
-}
+
+        .text-content {
+            text-align: left;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .text-content ul {
+            padding-left: 20px;
+        }
+
+        .text-content p, 
+        .text-content li {
+            text-align: left;
+        }
 
         .label {
             position: absolute;
@@ -95,46 +100,55 @@
             transition: opacity 0.2s ease;
             left: 20%;
         }
-		/* Fix for Mobile Screens */
-@media (max-width: 768px) {
-    .image-container {
-        height: 400px; /* Adjust for smaller screens */
-        max-height: 30vh;
-    }
 
-    .image1, .image2 {
-        object-fit: contain; /* Ensures full visibility on small screens */
-    }
-       
-    }
-}
-}
+        button {
+            background-color: #ffcc00;
+            border: none;
+            color: #111;
+            font-weight: bold;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .image-container {
+                height: 400px;
+                max-height: 30vh;
+            }
+
+            .image1, .image2 {
+                object-fit: contain;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <h2>Myanmar earthquake:28 March 2025</h2>
-	 <h2>(Analysis done by NRSC, ISRO)</h2>   
+        <h2>(Analysis done by NRSC, ISRO)</h2>   
         <div id="sliders"></div>
     </div>
 
-  <div class="text-content">
-	    <p><b>In Brief</b></p>
-            <ul>
-				<li><i> A 7.7 magnitude earthquake hit Myanmar on 28 March 2025 causing severe damage in Sagaing, Mandalay and surrounding areas.</i></li>
-                <li><i>The Earthquake was likely triggered by rupture along the Sagaing Fault, near the Indian and Eurasian plate boundary.</i></li>
-		<li><i>The International Charter for Space and Major Disasters (Call ID: 1095) was activated,with ISRO providing VHR satellite imagery over Mandalay and Sagaing cities of Myanmar.</i></li>
-<li><i>Rapid mapping using ISRO’s Cartosat-3 data revealed extensive damage, including the collapse of Ava Bridge, buildings and monasteries in Sagaing and Mandalay.</i></li>
-			 </ul>
-
-
+    <div class="text-content" id="text-section">
+        <p><b>In Brief</b></p>
+        <ul>
+            <li><i>A 7.7 magnitude earthquake hit Myanmar on 28 March 2025 causing severe damage in Sagaing, Mandalay and surrounding areas.</i></li>
+            <li><i>The Earthquake was likely triggered by rupture along the Sagaing Fault, near the Indian and Eurasian plate boundary.</i></li>
+            <li><i>The International Charter for Space and Major Disasters (Call ID: 1095) was activated, with ISRO providing VHR satellite imagery over Mandalay and Sagaing cities of Myanmar.</i></li>
+            <li><i>Rapid mapping using ISRO’s Cartosat-3 data revealed extensive damage, including the collapse of Ava Bridge, buildings and monasteries in Sagaing and Mandalay.</i></li>
+        </ul>
+        <button onclick="readText()">🔊 Read Summary</button>
+    </div>
 
     <script>
         const imagePairs = [
             { title: "Aung Yadnar st", before: "Pre1.png", after: "Post1.png", beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3(29.03.2025)" },
             { title: "Ava Bridge", before: "Pre2.png", after: "Post2.png", beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3 (29.03.2025)" },
-            { title: "Sky Villa", before: "Pre3.png", after: "Post3.png",beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3 (29.03.2025)"},
-            { title: "Mandalay University", before: "Pre4.png", after: "Post4.png",beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3 (29.03.2025)"},
+            { title: "Sky Villa", before: "Pre3.png", after: "Post3.png", beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3 (29.03.2025)" },
+            { title: "Mandalay University", before: "Pre4.png", after: "Post4.png", beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3 (29.03.2025)" },
             { title: "Irrawaddy River Floodplain", before: "Pre5.png", after: "Post5.png", beforeLabel: "PRE:Cartosat-3(18.03.2025)", afterLabel: "POST:Cartosat-3 (29.03.2025)" }
         ];
 
@@ -211,6 +225,15 @@
 
             updateClipPath();
         });
+
+        // Text-to-Speech function
+        function readText() {
+            const content = document.getElementById('text-section').innerText;
+            const utterance = new SpeechSynthesisUtterance(content);
+            utterance.lang = 'en-US';
+            speechSynthesis.cancel(); // Stop previous speech
+            speechSynthesis.speak(utterance);
+        }
     </script>
 </body>
 </html>
