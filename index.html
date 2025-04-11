@@ -230,7 +230,7 @@
         function readText() {
             const content = document.getElementById('text-section').innerText;
             const utterance = new SpeechSynthesisUtterance(content);
-            utterance.lang = 'en-US';
+            utterance.lang = 'en-IN';
             utterance.rate = 1.75; // 1.5x speed
             speechSynthesis.cancel(); // Stop previous speech
             speechSynthesis.speak(utterance);
